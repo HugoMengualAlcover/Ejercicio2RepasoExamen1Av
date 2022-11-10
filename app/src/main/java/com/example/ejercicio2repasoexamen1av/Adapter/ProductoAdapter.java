@@ -18,6 +18,7 @@ import com.example.ejercicio2repasoexamen1av.Modelos.Producto;
 import com.example.ejercicio2repasoexamen1av.R;
 
 
+import java.text.NumberFormat;
 import java.util.List;
 
 public class ProductoAdapter extends RecyclerView.Adapter<ProductoAdapter.ProductoVH> {
@@ -25,11 +26,13 @@ public class ProductoAdapter extends RecyclerView.Adapter<ProductoAdapter.Produc
     private List<Producto> objects;
     private int resource;
     private Context context;
+    NumberFormat nf;
 
     public ProductoAdapter(List<Producto> objects, int resource, Context context) {
         this.objects = objects;
         this.resource = resource;
         this.context = context;
+        nf = NumberFormat.getCurrencyInstance();
     }
 
     @NonNull
@@ -40,7 +43,7 @@ public class ProductoAdapter extends RecyclerView.Adapter<ProductoAdapter.Produc
                 ViewGroup.LayoutParams.MATCH_PARENT,
                 ViewGroup.LayoutParams.WRAP_CONTENT
         ));
-        return null;
+        return new ProductoVH(productoFilaView);
     }
 
     @Override
@@ -48,17 +51,30 @@ public class ProductoAdapter extends RecyclerView.Adapter<ProductoAdapter.Produc
         Producto producto = objects.get(position);
         holder.lblNombre.setText(producto.getNombre());
         holder.lblCantidad.setText(producto.getCantidad());
-        holder.lblPrecio.setText(String.valueOf(producto.getPrecio()));
+        holder.lblPrecio.setText(nf.format(producto.getPrecio()));
         holder.btnBorrar.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                objects.remove(producto);
-                notifyItemRemoved(holder.getAdapterPosition());
+                confirmDelete(producto, holder.getAdapterPosition());
             }
         });
 
     }
 
+    private AlertDialog confirmDelete (Producto producto, int position){
+        AlertDialog.Builder builder = new AlertDialog.Builder(context);
+        builder.setTitle("Seguro?!");
+        builder.setCancelable(false);
+        builder.setNegativeButton("Cancelar", null);
+        builder.setPositiveButton("Eliminar", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialogInterface, int i) {
+                objects.remove(producto);
+                notifyItemRemoved(position);
+            }
+        });
+        return  builder.create();
+    }
 
 
     @Override
