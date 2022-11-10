@@ -1,14 +1,16 @@
 package com.example.ejercicio2repasoexamen1av.Modelos;
 
-public class Producto {
+import java.io.Serializable;
+
+public class Producto implements Serializable {
     private String nombre;
     private float precio;
-    private int cantiad;
+    private int cantidad;
 
-    public Producto(String nombre, float precio, int cantiad) {
+    public Producto(String nombre, float precio, int cantidad) {
         this.nombre = nombre;
         this.precio = precio;
-        this.cantiad = cantiad;
+        this.cantidad = cantidad;
     }
 
     public String getNombre() {
@@ -27,11 +29,11 @@ public class Producto {
         this.precio = precio;
     }
 
-    public int getCantiad() {
-        return cantiad;
+    public int getCantidad() {
+        return cantidad;
     }
 
-    public void setCantiad(int cantiad) {
-        this.cantiad = cantiad;
+    public void setCantidad(int cantidad) {
+        this.cantidad = cantidad;
     }
 }
