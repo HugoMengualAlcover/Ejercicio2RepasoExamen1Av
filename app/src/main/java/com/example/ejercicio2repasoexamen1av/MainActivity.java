@@ -24,6 +24,7 @@ import android.widget.Toast;
 
 import com.example.ejercicio2repasoexamen1av.databinding.ActivityMainBinding;
 
+import java.text.NumberFormat;
 import java.util.ArrayList;
 
 
@@ -36,6 +37,8 @@ public class MainActivity extends AppCompatActivity {
     private ProductoAdapter adapter;
     private RecyclerView.LayoutManager layoutManager;
 
+    private NumberFormat nf;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -43,7 +46,12 @@ public class MainActivity extends AppCompatActivity {
         binding = ActivityMainBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
 
+        productosList = new ArrayList<>();
+        nf = NumberFormat.getCurrencyInstance();
+
         setSupportActionBar(binding.toolbar);
+
+        calculaValoresFinales();
 
         inicializarLaunchers();
 
@@ -110,26 +118,31 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onActivityResult(ActivityResult result) {
                 if (result.getResultCode() == RESULT_OK) {
-                    if (result.getData() != null) {
-                        if (result.getData().getExtras() != null) {
-                            if (result.getData().getExtras().getSerializable("PRODUCTO") != null) {
-
-                                Producto producto = (Producto) result.getData().getExtras().getSerializable("PRODUCTO");
-                                productosList.add(producto);
-
-                            } else {
-                                Toast.makeText(MainActivity.this, "NO HAY DATOS", Toast.LENGTH_SHORT).show();
-                            }
-                        } else {
-                            Toast.makeText(MainActivity.this, "NO HAY BUNDLE EN EL INTENT", Toast.LENGTH_SHORT).show();
-                        }
+                    if (result.getData() != null && result.getData().getExtras() != null) {
+                        Producto p = (Producto) result.getData().getExtras().getSerializable("PRODUCTO");
+                        productosList.add(p);
+                        adapter.notifyItemInserted(productosList.size()-1);
+                        calculaValoresFinales();
                     } else {
-                        Toast.makeText(MainActivity.this, "NO HAY INTENT", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(MainActivity.this, "NO HAY INTENT o BUNDLE", Toast.LENGTH_SHORT).show();
                     }
                 } else {
                     Toast.makeText(MainActivity.this, "VENTANA CANCELADA", Toast.LENGTH_SHORT).show();
                 }
             }
         });
+    }
+
+    public void calculaValoresFinales(){
+        int cantidadTotal = 0;
+        float importeTotal = 0;
+
+        for (Producto p: productosList) {
+            cantidadTotal += p.getCantidad();
+            importeTotal += p.getCantidad() * p.getPrecio();
+        }
+
+        binding.contentMain.lblCantidadMain.setText(String.valueOf(cantidadTotal));
+        binding.contentMain.lblPrecioTotalMain.setText(nf.format(cantidadTotal));
     }
 }
