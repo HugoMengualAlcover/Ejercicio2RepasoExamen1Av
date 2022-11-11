@@ -55,8 +55,6 @@ public class MainActivity extends AppCompatActivity {
 
         inicializarLaunchers();
 
-        View productoView = LayoutInflater.from(this).inflate(R.layout.producto_card, null);
-
         adapter = new ProductoAdapter(productosList, R.layout.producto_card, this);
         layoutManager = new GridLayoutManager(this, 1);
         binding.contentMain.contenedor.setAdapter(adapter);
@@ -68,50 +66,8 @@ public class MainActivity extends AppCompatActivity {
                 launcherCrear.launch(new Intent(MainActivity.this, AnyadirAListaCompraActivity.class));
             }
         });
-
-        productoView.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                editarProducto();
-            }
-        });
-
-
     }
 
-
-    private AlertDialog editarProducto() {
-        AlertDialog.Builder builder = new AlertDialog.Builder(this);
-        builder.setTitle("Editar Producto");
-        builder.setCancelable(false);
-
-        View productoAlertView = LayoutInflater.from(this).inflate(R.layout.editar_producto_alert, null);
-        builder.setView(productoAlertView);
-
-        EditText txtNombre = productoAlertView.findViewById(R.id.txtNombreProductoAlert);
-        EditText txtPrecio = productoAlertView.findViewById(R.id.txtPrecioProductoAlert);
-        EditText txtCantidad = productoAlertView.findViewById(R.id.txtCantidadProductoAlert);
-
-        builder.setNegativeButton("Cancelar", null);
-        builder.setPositiveButton("Agregar", new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialogInterface, int i) {
-                if(!txtNombre.getText().toString().isEmpty() && !txtPrecio.getText().toString().isEmpty() &&
-                        !txtCantidad.getText().toString().isEmpty()) {
-                    Producto producto = new Producto(
-                            txtNombre.getText().toString(), Float.parseFloat(txtPrecio.getText().toString()),
-                            Integer.parseInt(txtCantidad.getText().toString())
-                    );
-                    productosList.add(0, producto);
-                    adapter.notifyItemInserted(0);
-                }else{
-                    Toast.makeText(MainActivity.this, "FALTAN DATOS", Toast.LENGTH_SHORT).show();
-                }
-            }
-        });
-
-        return builder.create();
-    }
 
     private void inicializarLaunchers() {
         launcherCrear = registerForActivityResult(new ActivityResultContracts.StartActivityForResult(), new ActivityResultCallback<ActivityResult>() {

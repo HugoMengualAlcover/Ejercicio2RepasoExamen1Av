@@ -44,8 +44,8 @@ public class AnyadirAListaCompraActivity extends AppCompatActivity {
     }
 
     private Producto crearProducto() {
-        if (binding.txtCantidadCrear.getText().toString().isEmpty() &&
-                binding.txtPrecioCrear.getText().toString().isEmpty() &&
+        if (binding.txtCantidadCrear.getText().toString().isEmpty() ||
+                binding.txtPrecioCrear.getText().toString().isEmpty() ||
                 binding.txtNombreCrear.getText().toString().isEmpty()) {
             return null;
         }
