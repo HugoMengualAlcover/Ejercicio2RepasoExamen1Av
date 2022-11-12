@@ -37,7 +37,7 @@ public class AnyadirAListaCompraActivity extends AppCompatActivity {
                     finish();
                 } else {
                     Toast.makeText(AnyadirAListaCompraActivity.this, "FALTAN DATOS", Toast.LENGTH_SHORT).show();
-                    ;
+
                 }
             }
         });
